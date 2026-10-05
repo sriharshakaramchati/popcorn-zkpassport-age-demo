@@ -1,0 +1,1 @@
+{"name":"popcorn-zkpassport-demo","version":"0.1.0","private":true,"type":"module","scripts":{"start":"node src/server.mjs","test":"node --test test/*.test.mjs"},"dependencies":{"@zkpassport/sdk":"0.17.1","qrcode":"1.5.4"},"engines":{"node":">=20"}}
