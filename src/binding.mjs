@@ -21,7 +21,7 @@ export function verifyCredential(token, key, sessionId, nonce, now = Date.now(),
     const claims = JSON.parse(Buffer.from(body, 'base64url').toString());
     return claims.v === 1 && claims.aud === 'popcorn-zkpassport-age-demo' && claims.ageOver18 === true &&
       claims.sessionId === sessionId && claims.nonce === nonce && claims.exp > now && claims.iat <= now &&
-      claims.mode === mode && ['passport-only','popcorn-attested'].includes(mode) ? claims : null;
+      claims.mode === mode && ['passport-only','popcorn-connected','popcorn-attested'].includes(mode) ? claims : null;
   } catch { return null; }
 }
 export function requireExactProofQuery(query, binding) {
