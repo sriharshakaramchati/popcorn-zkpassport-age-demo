@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY src ./src
+COPY scripts ./scripts
+RUN npm i --no-save esbuild@0.28.2 && node scripts/build-client.mjs && npm rm --no-save esbuild
 USER node
 ENV PORT=3000 FLOW_MODE=passport-only
 EXPOSE 3000
