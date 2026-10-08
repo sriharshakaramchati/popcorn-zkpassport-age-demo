@@ -1,0 +1,15 @@
+{
+  "audience": "https://popcorn-gateway-gcp-asia-south1-staging.reclaimprotocol.org",
+  "project_id": null,
+  "zone": null,
+  "instance_name": null,
+  "service_account": null,
+  "workload_image_digests": [
+    "us-docker.pkg.dev/rc-popcorn/popcorn-images/browser-runtime@sha256:20a5fe4ec3795cf4faf934fe732f9f8c8862c833454ad7452fd0564e0e5d204e"
+  ],
+  "verifier_image_digests": [
+    "us-docker.pkg.dev/rc-popcorn/popcorn-images/browser-runtime-attestor@sha256:6ed736d7ba9b61bad1c54b3597dc336ff221da78b8e2b9a15cc2258de7dccbe7"
+  ],
+  "max_age_seconds": 300,
+  "clock_skew_seconds": 30
+}
