@@ -4,7 +4,7 @@ export const SCOPE='popcorn-age-demo-v1';
 export class AgeFlow {
  constructor({key,verifyProof,verifyAttestation,now=()=>Date.now()}){this.key=key;this.verifyProof=verifyProof;this.verifyAttestation=verifyAttestation;this.now=now;this.records=new Map()}
  create({owner,session,mode}){
-  if(!['passport-only','popcorn-attested'].includes(mode))throw Error('Unsupported flow mode');
+  if(!['passport-only','popcorn-connected','popcorn-attested'].includes(mode))throw Error('Unsupported flow mode');
   const nonce=hexNonce(),id=randomUUID(),created=this.now();
   const record={id,owner,session,mode,nonce,binding:bindingContext(session.id,nonce),created,expires:Math.min(created+600000,Date.parse(session.expiresAt)),status:'pending',consumed:false};
   if(!Number.isFinite(record.expires)||record.expires<=created)throw Error('Session expired');
