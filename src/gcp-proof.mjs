@@ -19,9 +19,10 @@ export function digestBinding(proof) {
 }
 
 function validatePolicy(policy) {
-  for (const name of ['audience', 'project_id', 'zone', 'instance_name']) {
+  for (const name of ['audience', 'project_id', 'zone']) {
     assert(typeof policy?.[name] === 'string' && policy[name].length > 0, `trusted policy requires ${name}`);
   }
+  assert((typeof policy?.instance_name === 'string' && policy.instance_name.length > 0) || (typeof policy?.instance_name_prefix === 'string' && policy.instance_name_prefix.length >= 8), 'trusted policy requires instance_name or instance_name_prefix');
   if (policy.service_account !== undefined) assert(typeof policy.service_account === 'string' && policy.service_account.length > 0, 'invalid service_account policy');
   for (const name of ['workload_image_digests', 'verifier_image_digests']) {
     assert(Array.isArray(policy[name]) && policy[name].length > 0 &&
@@ -68,7 +69,7 @@ export function verifyProof(proof, nonce, policy, jwks, now = Math.floor(Date.no
   assert(claims.hwmodel === 'GCP_AMD_SEV' && claims.secboot === true, 'platform policy failed');
   const gce = claims.submods?.gce;
   assert(gce?.project_id === policy.project_id && gce?.zone === policy.zone, 'cloud identity mismatch');
-  assert(gce.instance_name === policy.instance_name, 'instance identity mismatch');
+  assert(typeof gce.instance_name === 'string' && (policy.instance_name ? gce.instance_name === policy.instance_name : gce.instance_name.startsWith(policy.instance_name_prefix)), 'instance identity mismatch');
   const accounts = [...(Array.isArray(claims.google_service_accounts) ? claims.google_service_accounts : []), gce.service_account, gce.service_account_id];
   if (policy.service_account !== undefined) assert(accounts.includes(policy.service_account), 'service account mismatch');
   return {
