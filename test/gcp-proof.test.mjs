@@ -57,5 +57,13 @@ test('requires independently pinned instance, even without a service-account cla
   const { service_account, ...instancePolicy } = policy;
   assert.equal(verifyProof(fixture({ google_service_accounts: undefined }), nonce, instancePolicy, jwks, now).platform_and_image_assertion_verified, true);
   assert.throws(() => verifyProof(fixture(), nonce, { ...instancePolicy, instance_name: 'other' }, jwks, now), /instance identity/);
-  assert.throws(() => verifyProof(fixture(), nonce, { ...instancePolicy, instance_name: undefined }, jwks, now), /requires instance_name/);
+  assert.throws(() => verifyProof(fixture(), nonce, { ...instancePolicy, instance_name: undefined }, jwks, now), /requires instance_name or instance_name_prefix/);
+});
+
+test('instance prefix matches GKE-style node names and rejects others', () => {
+  const { instance_name, ...base } = policy;
+  const f = () => fixture({ submods: { gce: { project_id: policy.project_id, zone: policy.zone, instance_name: 'expected-instance-pool-abc-1' } } });
+  assert.equal(verifyProof(f(), nonce, { ...base, instance_name_prefix: 'expected-instance-' }, jwks, now).platform_and_image_assertion_verified, true);
+  assert.throws(() => verifyProof(f(), nonce, { ...base, instance_name_prefix: 'other-instance-' }, jwks, now), /instance identity/);
+  assert.throws(() => verifyProof(f(), nonce, { ...base, instance_name_prefix: 'short' }, jwks, now), /requires instance_name/);
 });
